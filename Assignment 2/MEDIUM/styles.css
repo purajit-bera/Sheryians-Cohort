@@ -1,0 +1,146 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: rgb(8, 20, 30);
+    color: white;
+    font-family: sans-serif;
+}
+
+main{
+    padding: 0px 250px;
+}
+
+.top p {
+    text-transform: uppercase;
+}
+
+.top h1 {
+    text-transform: uppercase;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 50px 0px 30px;
+}
+
+.top>.left {
+    display: flex;
+    flex-direction: column;
+    /* background-color: aqua; */
+}
+
+.top>.left>.main-texts {
+    display: flex;
+    align-items: start;
+    gap: 70px;
+    /* background-color: royalblue; */
+}
+.top>.left>.main-texts .child1 {
+    /* background-color: bisque; */
+}
+.top>.left>.main-texts h1 {
+    font-size: 70px;
+}
+
+.top>.left>.main-texts .child2 {
+    /* background-color: crimson; */
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    color: rgb(152, 160, 169);
+    font-weight: bold;
+}
+
+.top>.left>.main-texts .child3 {
+    /* background-color: crimson; */
+    /* margin-top: 5px; */
+    padding: 5px 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 12px;
+    color: rgb(152, 160, 169);
+    font-weight: bold;
+    border-left: 1px solid white;
+}
+
+
+.top > .right {
+    padding: 10px 25px;
+    background-color: rgb(14, 24, 33);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    border: 2px solid rgb(35, 46, 56);
+    border-radius: 15px;
+}
+
+.ri-equalizer-2-line {
+    font-size: 25px;
+}
+
+
+.mid {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    row-gap: 20px;
+    flex-wrap: wrap;
+}
+
+.mid .big-img {
+    height: 450px;
+    width: 580px;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.mid .big-img img {
+    height: 100%;
+    width: 100%;
+}
+
+.mid .big-img .texts {
+    position: absolute;
+    top: 20%;
+    left: 65%;
+}
+
+.small-img{
+    height: 450px;
+    width: 250px;
+    overflow: hidden;
+    border-radius: 15px;
+    background-color: rgb(31, 51, 69);
+    text-transform: uppercase;
+}
+
+.small-img img {
+    width: 100%;
+    height: 70%;
+    object-fit: cover;
+
+}
+
+.small-img .texts {
+    padding: 10px;
+    /* display: flex;
+    flex-direction: column;
+    gap: 10px; */
+    
+}

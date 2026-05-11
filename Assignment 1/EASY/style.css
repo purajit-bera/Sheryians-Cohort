@@ -1,0 +1,143 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: sans-serif;
+    background-color:blanchedalmond;
+}
+
+main {
+    height: 95%;
+    width: 90%;
+    box-shadow: 10px 15px 25px rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(to right, rgb(252, 199, 12) 60%, rgb(250, 231, 181) 60%);
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.container nav {
+    height: 20%;
+    padding: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav #logo {
+    width: 200px;
+}
+
+nav .ri-menu-fill {
+    font-size: 50px;
+}
+
+.container .card {
+    padding: 10px 30px 10px 60px;
+    width: 100%;
+    height: 80%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+}
+.container .card .pokemon-details {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    gap: 10px;
+    position: relative;
+    top: -10%;
+}
+
+.pokemon-details #pokemon-gen {
+    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    word-spacing: 5px;
+}
+
+.pokemon-details #pokemon-name {
+    font-size: 150px;
+}
+
+.pokemon-details #pokemon-description {
+    font-size: 17px;
+    font-weight: 100;
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+.pokemon-details .number-texts {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; 
+    gap: 30px;
+
+}
+
+.pokemon-details hr {
+    border: 1px solid black;
+    width: 50px;
+}
+.pokemon-details #pokemon-no{
+    font-size: 18px;
+    font-weight: bold;
+}
+#pokemon-img {
+    height: 100%;
+    position: absolute;
+    left: 65.2%;
+    transform: translateX(-50%);
+    top: -10%;
+}
+
+.button-container {
+    align-self: center;
+    display: flex;
+    flex-direction:column;
+    gap: 10px;
+    position: relative;
+    top: -10%;
+}
+
+.button {
+    height: 10px;
+    width: 10px;
+    border-radius: 50px;
+    background-color: rgb(253, 202, 20);
+}
+
+.button-container #black-btn {
+    background-color: black;
+}
+
+#pokemon-ball {
+    height: 35%;
+    position: absolute;
+    bottom: -15%;
+    left: 0;
+    opacity: 0.1;
+}
