@@ -1,0 +1,154 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+head {
+    font-size: calc(10/1920 * 100vw);
+}
+
+body {
+    padding: 100px 250px;
+    background-color: #F6F6F6;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 48fr 400fr 197fr 179fr 136fr;
+    grid-template-rows: 15fr 65fr 264fr 150fr;
+    grid-template-areas: 
+    "nav-section about-me-section portfolio-heading-section portfolio-heading-section portfolio-heading-section"
+    "nav-section profile-section portfolio-heading-section portfolio-heading-section portfolio-heading-section"
+    "nav-section profile-section video-section video-section projects-section"
+    "nav-section profile-section clients-section design-section design-section";
+    gap: 2rem;
+}
+
+main > div {
+    background-color: #F6F6F6;
+    border:2px solid black;
+}
+
+.nav-section{
+    background-color: #F6F6F6;
+    grid-area: nav-section;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 4rem;
+    gap: 10%;
+    border: none;
+    margin-right: -2rem;
+}
+.nav-section p {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    letter-spacing: 1px;
+    font-weight: bold;
+}
+.about-me-section{
+    background-color: white;
+    grid-area: about-me-section;
+    display: grid;
+    grid-template-columns: 115fr 47fr 232fr;
+    grid-template-rows: 1fr;
+    border: none;
+    margin-bottom: -2rem;
+}
+
+.about-me-left-section{
+    background-color: #F6F6F6;
+}
+.about-me-center-section{
+   background: linear-gradient(
+    to right bottom,
+    #F6F6F6 49%,
+    #8184D2 51%
+);
+}
+.about-me-right-section{
+    background-color: #8184D2;
+    border-top-right-radius: 1.5rem;
+}
+
+/* .about-me-right-section{
+    background-color: crimson;
+    grid-area:about-me-right-section;
+}
+.profile-upper-right-section{
+    background-color: crimson;
+    grid-area: profile-upper-right-section;
+} */
+.profile-section{
+    background-color: #8184D2;
+    grid-area: profile-section;
+    border:none;
+    border-radius: 1.5rem;
+    border-top-right-radius: 0;
+}
+
+.profile-img-container {
+    width: 60%;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+}
+.profile-img-container .outer-cicrle {
+    height: 80%;
+    width: 80%;
+    border: 0.3rem solid white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.profile-img-container .inner-circle{
+    background-color: #EFAEFF;
+    height: 85%;
+    width: 85%;
+    border-radius: 50%;
+}
+.profile-img-container img {
+    height: 110%;
+    width: 100%;
+    object-fit: cover;
+    object-position: top;
+    /* background-color: yellow; */
+    position: absolute;
+    bottom: 0;
+}
+.portfolio-heading-section{
+    background-color: crimson;
+    grid-area: portfolio-heading-section;
+}
+.video-section{
+    background-color: crimson;
+    grid-area: video-section;
+}
+.clients-section{
+    background-color: crimson;
+    grid-area: clients-section;
+}
+.projects-section{
+    background-color: crimson;
+    grid-area: projects-section;
+}
+.design-section{
+    background-color: crimson;
+    grid-area: design-section;
+}
