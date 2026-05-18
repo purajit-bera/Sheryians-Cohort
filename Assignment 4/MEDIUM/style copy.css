@@ -1,0 +1,227 @@
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --grid-gap: 15px;
+    --box-padding: 30px;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: black;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    padding: 30px 200px;
+    display: grid;
+
+    grid-template-columns: 
+    calc((100% - 4 * var(--grid-gap)) * 24 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 18 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 7 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 26 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 24 / 100);
+
+    grid-template-rows: 
+    calc((100% - 4 * var(--grid-gap)) * 32 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 23 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 7 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 12 / 100)
+    calc((100% - 4 * var(--grid-gap)) * 26 / 100);
+
+    grid-template-areas: 
+    "left-top top-center-1 top-center-1 top-center-2 right-top"
+    "left-top center center center right-top"
+    "left-bottom center center center right-top"
+    "left-bottom center center center right-bottom"
+    "left-bottom bottom-center-1 bottom-center-2 bottom-center-2 right-bottom";
+
+    gap: var(--grid-gap);
+
+}
+
+/* left top part */
+
+.left-top{
+    background-color:rgba(251, 228, 229) ;
+    grid-area: left-top;
+    padding: var(--box-padding);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-top-upper {
+    width: 100%;
+    /* background-color: crimson; */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.left-top-upper h1 {
+    font-size: 20px;
+}
+
+.left-top-upper > i {
+    font-size: 30px;
+    align-self: flex-start;
+}
+
+.left-top >img {
+    width: 60%;
+}
+
+.left-top-bottom {
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    row-gap: 10px;
+}
+
+.left-top-bottom h1 {
+    font-size: 50px;
+}
+
+.left-top-bottom > p {
+    font-weight: 550;
+    line-height: 25px;
+}
+
+.left-top-bottom > a {
+    margin-top: 5px;
+    width: fit-content;
+    text-decoration: none;
+    color: black;
+    font-size: 12px;
+}
+
+.left-top-bottom .view-report-btn {
+    background-color: rgba(253, 240, 240);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    border-radius: 20px;
+}
+
+.view-report-btn > i {
+    font-size: 20px;
+    /* background-color: crimson; */
+}
+
+/* left bottom part */
+.left-bottom{
+    background-color:#1d1d1d ;
+    grid-area: left-bottom;
+    color:white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: var(--box-padding);
+}
+
+.left-bottom-upper {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.left-bottom-upper h1 {
+    font-size: 25px;
+}
+
+.left-bottom-upper h1>span {
+    font-size: 25px;
+    color: rgba(234, 201, 208);
+}
+
+.left-bottom-upper i {
+    background-color: rgba(50, 50, 51);
+    font-size: 20px;
+    padding: 10px;
+    border-radius: 15px;
+}
+
+.left-bottom-center {
+    display: flex;
+    justify-content: space-between;
+}
+
+.left-bottom-center img {
+    height: 180px;
+    width: 130px;
+    object-fit: cover;
+    border-radius: 25px;
+}
+
+.left-bottom-bottom {
+    /* background-color: yellow; */
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.left-bottom-bottom img{
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-right: -5px;
+}
+
+.left-bottom-bottom i {
+    font-size: 25px;
+    padding: 5px;
+    background-color: rgba(250, 116, 134);
+    border-radius: 50%;
+    margin-left: 7px;
+}
+
+.top-center-1{
+    background-color: tomato;
+    grid-area: top-center-1;
+}
+.top-center-2{
+    background-color: orchid;
+    grid-area: top-center-2;
+}
+.center{
+    background-color: lightskyblue;
+    grid-area: center;
+}
+.bottom-center-1{
+    background-color: sandybrown;
+    grid-area: bottom-center-1;
+}
+.bottom-center-2{
+    background-color: rebeccapurple;
+    grid-area: bottom-center-2;
+}
+.right-top{
+    background-color: rosybrown;
+    grid-area: right-top;
+}
+.right-bottom{
+    background-color: rgb(61, 201, 143);
+    grid-area: right-bottom;
+}
+
+main > div {
+    border-radius: 25px;
+    overflow: none;
+}
