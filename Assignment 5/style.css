@@ -7,8 +7,8 @@
     --gray-color:#F3F3F6;
     --dark-gray-color:#A1A1AA;
     --no-of-carasol-logos:6;
-    --width-of-carasol-logos:20rem;
-    --carasol-animation-duration:20s;
+    --width-of-carasol-logos:15rem;
+    --carasol-animation-duration:25s;
 }
 
 *{
@@ -397,8 +397,8 @@ body{
 /* Sliding logos */
 
 .sliding-logos{
-    margin: 6rem 0;
-    height: 17rem;
+    margin: 7rem 0;
+    height: 10rem;
     width: max(calc(20rem * 6), 100%);
     overflow: hidden;
     position:relative;
@@ -412,6 +412,10 @@ body{
     top:0;
     left: 100%;
     animation: move-left var(--carasol-animation-duration) linear infinite;
+}
+
+.sliding-logos:hover .carasol-img{
+    animation-play-state:paused;
 }
 
 @keyframes move-left{
