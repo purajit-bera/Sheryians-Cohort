@@ -401,58 +401,42 @@ body{
     height: 10rem;
     width: max(calc(20rem * 6), 100%);
     overflow: hidden;
-    position:relative;
 }
-
-.sliding-logos .carasol-img {
-    height:100%;
-    width: var(--width-of-carasol-logos);
-    object-fit:contain;
-    position:absolute;
-    top:0;
-    left: 100%;
-    animation: move-left var(--carasol-animation-duration) linear infinite;
+.sliding-logos::-webkit-scrollbar{
+    display: none;
+}
+.logos-track {
+    display: flex;
+    width: max-content;
+    animation: slide 10s infinite linear;
 }
 
 .sliding-logos:hover .carasol-img{
     animation-play-state:paused;
 }
-
-@keyframes move-left{
-    from{
-        top:0;
-        left:100%;
-    }
-    to{
-        top:0;
-        left: calc(var(--width-of-carasol-logos) * -1);
-    }
+.sliding-logos .group {
+    display: flex;
+    align-items: center;
+    gap: 8rem; 
+    padding:0 4rem; 
+    flex-shrink: 0;
 }
 
-#carasol-img-1 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 1) * -1);
-} 
+.sliding-logos img {
+    height: 12vh; 
+    width: auto; 
+    max-width: 200px; 
+    object-fit: contain;
+}
 
-#carasol-img-2 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 2) * -1);
-} 
-
-#carasol-img-3 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 3) * -1);
-} 
-
-#carasol-img-4 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 4) * -1);
-} 
-
-#carasol-img-5 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 5) * -1);
-} 
-
-#carasol-img-6 {
-    animation-delay: calc( var(--carasol-animation-duration) / var(--no-of-carasol-logos) * (var(--no-of-carasol-logos) - 6) * -1);
-} 
-
+@keyframes slide {
+    from {
+        transform: translateX(0);
+    }
+    to{
+        transform: translateX(-25%);
+    }
+}
 
 /* Footer-navigation */
 #footer-nav {
