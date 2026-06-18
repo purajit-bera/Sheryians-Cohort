@@ -1,16 +1,31 @@
 //====================DARK MODE===================
 
+let body = document.body;
 let themeToggleBtn = document.querySelector("#theme-toggle-btn");
 let themeToggleIcon = themeToggleBtn.querySelector("i");
+body.setAttribute("data-theme", "light");
+applyTheme();
 
-themeToggleBtn.addEventListener("click", () => {
-    if (document.body.classList.toggle("dark-theme")) {
+function applyTheme() {
+    let currentTheme = body.dataset.theme;
+    if (currentTheme === "dark") {
+        body.classList.add("dark-theme");
         themeToggleIcon.classList.remove("ri-sun-fill");
         themeToggleIcon.classList.add("ri-moon-fill");
-    } else {
+
+    } 
+    else 
+    {
+        body.classList.remove("dark-theme");
         themeToggleIcon.classList.remove("ri-moon-fill");
         themeToggleIcon.classList.add("ri-sun-fill");
     }
+}
+
+themeToggleBtn.addEventListener("click", () => {
+    let nextTheme = body.dataset.theme == "dark" ? "light" : "dark";
+    body.dataset.theme = nextTheme;
+    applyTheme();
 });
 
 //=====================TASK STATE===================
@@ -118,13 +133,15 @@ taskForm.addEventListener("submit", (event) => {
     if (updateIndex != null && updateIndex != -1) {
         allTasks[updateIndex].taskName = taskObj.taskName;
         allTasks[updateIndex].taskCategory = taskObj.taskCategory;
+        if (displayedTask != null) {
+            ui(displayedTask);
+        }
     } else {
         allTasks.push(taskObj);
+        ui();
     }
 
     taskForm.reset();
-
-    ui();
 
     closeTaskOperatorForm();
 });
@@ -177,15 +194,20 @@ taskSection.addEventListener("click", (event) => {
             (taskItem) => taskItem.taskId == taskCardId,
         );
         taskObj.isComplete = event.target.toggleAttribute("checked");
-        // ui();
+        if (displayedTask != null) {
+            ui(displayedTask);
+        } else {
+            ui();
+        }
     }
 });
 
 //=====================Filter Task===================
 let searchTaskInput = document.querySelector("#search-task-input");
 
+let displayedTask = null;
 searchTaskInput.addEventListener("input", () => {
-    let displayedTask;
+    displayedTask = null;
     let searchedValue = searchTaskInput.value.trim();
     if (searchedValue === "") {
         displayedTask = [...allTasks];
