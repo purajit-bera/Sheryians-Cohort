@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TaskToDo | Simple interactive task manager</title>
+        <link rel="stylesheet" href="style.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+            rel="stylesheet"
+        />
+    </head>
+    <body>
+        <main>
+            <section id="top-section">
+                <h1>TaskToDo</h1>
+                <button id="theme-toggle-btn">
+                    <i class="ri-sun-fill"></i>
+                </button>
+            </section>
+            <div class="search-container">
+                <i class="ri-search-line"></i>
+                <input
+                    type="text"
+                    name=""
+                    id="search-task-input"
+                    placeholder="Search your task..."
+                />
+            </div>
+            <h2>All Task</h2>
+
+            <section class="task-section">
+            </section>
+
+            <button id="add-task-btn"><i class="ri-add-line"></i></button>
+
+            <div class="task-opertation-form">
+                <div id="top-section">
+                    <i
+                        id="close-task-form-btn"
+                        class="ri-close-large-line"
+                    ></i>
+                </div>
+                <form id="create-task-form" action="">
+                    <h3>Create Task</h3>
+                    <div class="input-group">
+                        <label for="task-name-input">Name</label>
+                        <input
+                            required
+                            id="task-name-input"
+                            type="text"
+                            placeholder="Your Task name"
+                        />
+                    </div>
+                    <div class="input-group" id="category-section">
+                        <label for="task-category">Category</label>
+                        <select name="" id="task-category" required>
+                            <option value="" disabled selected>
+                                --No Category--
+                            </option>
+                            <option value="study">Study</option>
+                            <option value="work">Work</option>
+                            <option value="health">Health</option>
+                            <option value="life style">Life Style</option>
+                        </select>
+                    </div>
+                    <button type="submit">Add Task</button>
+                </form>
+            </div>
+        </main>
+
+        <script src="script.js"></script>
+    </body>
+</html>

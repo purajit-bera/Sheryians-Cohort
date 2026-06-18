@@ -209,7 +209,7 @@ main #scroll-dwn-btn {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    width: 80vw;
+    width: clamp(290px, 30vw, 322px);
     flex-shrink: 0;
     margin-bottom: 1.5rem;
 }
@@ -222,7 +222,7 @@ main #scroll-dwn-btn {
 }
 .best-product > .img-part{
     background-color: #C1EE91;
-    height: 45vh;
+    height: clamp(240px, 37vh, 363px);
     width:100%;
     border: 1px solid black;
     border-radius: 0.5rem;
@@ -231,6 +231,7 @@ main #scroll-dwn-btn {
     flex-direction: column;
     justify-content: space-between;
     padding: 3vw;
+        cursor: pointer;
 }
 .best-product > .img-part > img {
     /* background-color: yellow; */
@@ -241,8 +242,12 @@ main #scroll-dwn-btn {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-}
+    transition: all ease 0.5s;
 
+}
+.best-product > .img-part:hover > img {
+    scale: 1.06;
+}
 .best-product > .img-part > .top-part {
     display: flex;
     justify-content: space-between; 
@@ -286,16 +291,20 @@ main #scroll-dwn-btn {
 .best-product > .info-part > h3 {
     font-family: "Reckless";
     font-weight: 100;
-    font-size: clamp(1.5rem, 1.5vw, 2rem);
+    font-size: clamp(1.4rem, 1.2vw, 1.6rem);
 }
 
 .best-product > .info-part > p {
     font-family: "Figtree";
     font-weight: 500;
-    font-size: clamp(0.9rem, 1vw, 1.5rem);
+    font-size: clamp(0.8rem, 0.7vw, 1rem);
 }
 .best-product > .info-part > .price {
     margin-top: 1rem;
+}
+
+.best-product > .info-part > .description {
+    font-weight: 100;
 }
 
 /*-----------------------------------Tablet Screen----------------------------*/
@@ -380,15 +389,15 @@ main #scroll-dwn-btn {
     #best-seller-section > #second-heading > h2{
         padding: 0.3rem;
     }
-
+/* 
     #best-products-container > .best-product 
     {
         width: 21vw;
-    }
+    } */
 
     .best-product > .img-part
     {
-        height: 50vh;
+        /* height: 50vh; */
         padding:1rem;
     }
 
