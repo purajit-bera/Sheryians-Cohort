@@ -135,39 +135,25 @@ taskOperationForm.addEventListener("submit", (event) => {
     }
 });
 
-// Delete The Task
-taskDisplayedSection.addEventListener("click", (event) => {
-    if (
-        event.target.classList.contains("delete-btn-logo") ||
-        event.target.classList.contains("delete-btn")
-    ) {
-        let taskCard = event.target.closest(".task-card");
-        let taskId = taskCard.dataset.id;
-        console.log("del", allTasks);
-        console.log(taskId);
-        let taskIndex = allTasks.findIndex(
-            (taskItem) => taskItem.taskId == taskId,
-        );
-        if (taskIndex !== -1) {
-            allTasks.splice(taskIndex, 1);
-            localStorage.setItem("all-tasks", JSON.stringify(allTasks));
-            taskCard.remove();
-            toggleNoTaskPresentScreen();
-        }
-    }
-});
 
-// Update the task -> showing task details in task operation form
+
 taskDisplayedSection.addEventListener("click", (event) => {
+    let taskCard = event.target.closest(".task-card");
+    if(!taskCard){
+        return;
+    }
+    let taskId = taskCard.dataset.id;
+    let taskIndex = allTasks.findIndex(
+        (taskItem) => taskItem.taskId == taskId,
+    );
+    if(taskIndex == -1){
+        return;
+    }
+// Update the task -> showing task details in task operation form
     if (
         event.target.classList.contains("edit-btn-logo") ||
         event.target.classList.contains("edit-btn")
     ) {
-        let taskCard = event.target.closest(".task-card");
-        let taskId = taskCard.dataset.id;
-        let taskIndex = allTasks.findIndex(
-            (taskItem) => taskItem.taskId == taskId,
-        );
         if (taskIndex !== -1) {
             showTaskOperationScreen(true);
             taskNameInput.value = allTasks.at(taskIndex).taskName;
@@ -176,16 +162,20 @@ taskDisplayedSection.addEventListener("click", (event) => {
             updateIndex = taskIndex;
         }
     }
-});
-
+// Delete the task 
+    else if (
+        event.target.classList.contains("delete-btn-logo") ||
+        event.target.classList.contains("delete-btn")
+    ) {
+        if (taskIndex !== -1) {
+            allTasks.splice(taskIndex, 1);
+            localStorage.setItem("all-tasks", JSON.stringify(allTasks));
+            taskCard.remove();
+            toggleNoTaskPresentScreen();
+        }
+    }
 //complete the task 
-taskDisplayedSection.addEventListener("click", (event) => {
-    if(event.target.getAttribute("type") == "checkbox"){
-        let taskCard = event.target.closest(".task-card");
-        let taskId = taskCard.dataset.id;
-        let taskIndex = allTasks.findIndex(
-            (taskItem) => taskItem.taskId == taskId,
-        );
+    else if(event.target.matches('input[type="checkbox"]')){
         if(taskIndex !== -1) {
             allTasks.at(taskIndex).isComplete = event.target.checked;
             localStorage.setItem("all-tasks", JSON.stringify(allTasks));
