@@ -3,7 +3,12 @@
 let body = document.body;
 let themeToggleBtn = document.querySelector("#theme-toggle-btn");
 let themeToggleIcon = themeToggleBtn.querySelector("i");
-body.setAttribute("data-theme", "light");
+let themeToUse = localStorage.getItem("theme");
+if (themeToUse == null) {
+    themeToUse = "light";
+    localStorage.setItem("theme", themeToUse);
+}
+body.setAttribute("data-theme", themeToUse);
 applyTheme();
 
 function applyTheme() {
@@ -12,13 +17,12 @@ function applyTheme() {
         body.classList.add("dark-theme");
         themeToggleIcon.classList.remove("ri-sun-fill");
         themeToggleIcon.classList.add("ri-moon-fill");
-
-    } 
-    else 
-    {
+        localStorage.setItem("theme", "dark");
+    } else {
         body.classList.remove("dark-theme");
         themeToggleIcon.classList.remove("ri-moon-fill");
         themeToggleIcon.classList.add("ri-sun-fill");
+        localStorage.setItem("theme", "light");
     }
 }
 
@@ -30,99 +34,76 @@ themeToggleBtn.addEventListener("click", () => {
 
 //=====================TASK STATE===================
 
-let allTasks = [];
+let allTasks = JSON.parse(localStorage.getItem("all-tasks"));
+
+if (allTasks == null) {
+    allTasks = [];
+}
+
 let updateIndex = null;
 
 //=====================DOM ELEMENTS====================
+let filterTaskInput = document.querySelector("#search-task-input");
+let taskDisplayedSection = document.querySelector(".task-section");
+let noTaskPresentScreen = taskDisplayedSection.querySelector(
+    "#no-task-present-section",
+);
+let noTaskPresentScreenHeading = noTaskPresentScreen.querySelector("h3");
+let homeAddTaskBtn = document.querySelector("#add-task-btn");
+let taskOperationScreen = document.querySelector(".task-opertation-form");
+let closeTaskOperationScreenBtn = document.querySelector(
+    "#close-task-form-btn",
+);
 
-let taskSection = document.querySelector(".task-section");
-
-let addTaskBtn = document.querySelector("#add-task-btn");
-
-let taskOpertationForm = document.querySelector(".task-opertation-form");
-
-let closeTaskFormBtn = document.querySelector("#close-task-form-btn");
-
-let taskForm = document.querySelector("#create-task-form");
-let taskHeading = taskForm.querySelector("h3");
-let taskInput = taskForm.querySelector("#task-name-input");
-let taskCategoryInput = taskForm.querySelector("#task-category");
-let taskOperationBtn = taskForm.querySelector("button");
+let taskOperationForm = document.querySelector("#create-task-form");
+let taskOperationHeading = taskOperationForm.querySelector("h3");
+let taskNameInput = taskOperationForm.querySelector("#task-name-input");
+let taskCategoryInput = taskOperationForm.querySelector("#task-category");
+let taskOperationBtn = taskOperationForm.querySelector("button");
 
 //=====================UI FUNCTIONS========================
 
-function ui(taskToDisplay = allTasks) {
-    taskSection.innerHTML = "";
-
-    taskToDisplay.forEach((task, index) => {
-        let taskCard = document.createElement("div");
-
-        taskCard.classList.add("task-card");
-        let isTaskCompleted = task.isComplete;
-        taskCard.setAttribute("data-id", `${task.taskId}`);
-        taskCard.setAttribute("data-category", `${task.taskCategory}`);
-        taskCard.setAttribute(
-            "data-status",
-            `${isTaskCompleted ? "Complete" : "Incomplete"}`,
-        );
-        taskCard.innerHTML = `
-            <div class="task-details">
-                <input type="checkbox" ${isTaskCompleted ? "checked" : ""} />
-                <p class ="${isTaskCompleted ? "completed" : ""}">${task.taskName}</p>
-            </div>
-
-            <div class="task-actions">
-
-                <button onclick="updateTask(${task.taskId})" class="edit-btn">
-                    <i class="ri-pencil-line"></i>
-                </button>
-
-                <button class="delete-btn">
-                    <i class="ri-delete-bin-7-line delete-btn-logo"></i>
-                </button>
-
-            </div>
-        `;
-
-        taskSection.append(taskCard);
-    });
-}
-
-function closeTaskOperatorForm() {
-    taskOpertationForm.style.display = "none";
-
-    taskForm.reset();
-
-    if (updateIndex != null && updateIndex != -1) {
-        taskHeading.innerText = "Create Task";
-        taskOperationBtn.innerText = "Add Task";
-
-        updateIndex = null;
+function showTaskOperationScreen(isShowed) {
+    if (isShowed) {
+        taskOperationScreen.style.display = "flex";
+    } else {
+        taskOperationScreen.style.display = "none";
     }
 }
 
-//=====================EVENTS===============
-
-addTaskBtn.addEventListener("click", () => {
-    taskOpertationForm.style.display = "flex";
+//Displaying Task Operation Screen using Home's add task button
+homeAddTaskBtn.addEventListener("click", () => {
+    showTaskOperationScreen(true);
 });
 
-closeTaskFormBtn.addEventListener("click", () => {
-    closeTaskOperatorForm();
+//Closing Task Operation screen
+closeTaskOperationScreenBtn.addEventListener("click", () => {
+    taskOperationForm.reset();
+    setUpdateMode(false);
+    showTaskOperationScreen(false);
+    updateIndex = null;
 });
 
-taskForm.addEventListener("submit", (event) => {
+function setUpdateMode(isUpdate) {
+    if (isUpdate) {
+        taskOperationHeading.innerText = "Edit Task";
+        taskOperationBtn.innerText = "Update";
+    } else {
+        taskOperationHeading.innerText = "Create Task";
+        taskOperationBtn.innerText = "Add Task";
+    }
+}
+
+//Add Or Update Task
+taskOperationForm.addEventListener("submit", (event) => {
     event.preventDefault();
-
-    let taskName = taskInput.value;
+    let taskName = taskNameInput.value.trim();
     let taskCategory = taskCategoryInput.value;
-
-    if (taskName.trim() === "" || taskCategory.trim() === "") {
-        alert("Enter proper name for task and select the category of it...");
-
+    if (taskName === "" || taskCategory === "") {
+        alert("Enter Valid task name and select it's proper category!");
+        taskNameInput.value = "";
         return;
     }
-
     let taskObj = {
         taskId: Date.now(),
         taskName,
@@ -131,95 +112,175 @@ taskForm.addEventListener("submit", (event) => {
     };
 
     if (updateIndex != null && updateIndex != -1) {
-        allTasks[updateIndex].taskName = taskObj.taskName;
-        allTasks[updateIndex].taskCategory = taskObj.taskCategory;
-        if (displayedTask != null) {
-            ui(displayedTask);
-        }
+        allTasks.at(updateIndex).taskName = taskObj.taskName;
+        allTasks.at(updateIndex).taskCategory = taskObj.taskCategory;
+        updateIndex = null;
+        setUpdateMode(false);
     } else {
         allTasks.push(taskObj);
-        ui();
     }
+    localStorage.setItem("all-tasks", JSON.stringify(allTasks));
+    taskOperationForm.reset();
+    showTaskOperationScreen(false);
+    if (filterTaskInput.value.trim()) {
+        let searchedText = filterTaskInput.value.trim().toLowerCase();
 
-    taskForm.reset();
+        let filteredTasks = allTasks.filter((task) =>
+            task.taskName.toLowerCase().includes(searchedText),
+        );
 
-    closeTaskOperatorForm();
+        displayTasks(filteredTasks);
+    } else {
+        displayTasks();
+    }
 });
 
-taskSection.addEventListener("click", (event) => {
+// Delete The Task
+taskDisplayedSection.addEventListener("click", (event) => {
     if (
         event.target.classList.contains("delete-btn-logo") ||
         event.target.classList.contains("delete-btn")
     ) {
-        let deletedTaskCard = event.target.closest(".task-card");
-
-        let deletedTaskId = deletedTaskCard.dataset.id;
-
-        let deletedTaskIndex = allTasks.findIndex(
-            (task) => task.taskid === deletedTaskId,
-        );
-
-        allTasks.splice(deletedTaskIndex, 1);
-
-        deletedTaskCard.remove();
-    }
-});
-
-//=====================TASK OPERATIONS=======================
-
-function updateTask(taskId) {
-    console.log(allTasks);
-
-    let task = allTasks.find((taskItem) => taskItem.taskId === taskId);
-
-    updateIndex = allTasks.findIndex((taskItem) => taskItem.taskId === taskId);
-
-    taskForm[0].value = task.taskName;
-    taskForm[1].value = task.taskCategory;
-
-    taskOpertationForm.style.display = "flex";
-
-    taskHeading.innerText = "Update Task";
-    taskOperationBtn.innerText = "Update Task";
-}
-
-//====================COMPLETE TASK=================
-taskSection.addEventListener("click", (event) => {
-    if (event.target.type === "checkbox") {
         let taskCard = event.target.closest(".task-card");
-        let taskCardId = taskCard.dataset.id;
-        console.log(taskCardId);
-        console.log(allTasks);
-        let taskObj = allTasks.find(
-            (taskItem) => taskItem.taskId == taskCardId,
+        let taskId = taskCard.dataset.id;
+        console.log("del", allTasks);
+        console.log(taskId);
+        let taskIndex = allTasks.findIndex(
+            (taskItem) => taskItem.taskId == taskId,
         );
-        taskObj.isComplete = event.target.toggleAttribute("checked");
-        if (displayedTask != null) {
-            ui(displayedTask);
-        } else {
-            ui();
+        if (taskIndex !== -1) {
+            allTasks.splice(taskIndex, 1);
+            localStorage.setItem("all-tasks", JSON.stringify(allTasks));
+            taskCard.remove();
+            toggleNoTaskPresentScreen();
         }
     }
 });
 
-//=====================Filter Task===================
-let searchTaskInput = document.querySelector("#search-task-input");
-
-let displayedTask = null;
-searchTaskInput.addEventListener("input", () => {
-    displayedTask = null;
-    let searchedValue = searchTaskInput.value.trim();
-    if (searchedValue === "") {
-        displayedTask = [...allTasks];
-    } else {
-        displayedTask = allTasks.filter((taskItem) =>
-            taskItem.taskName.toLowerCase().includes(searchedValue),
+// Update the task -> showing task details in task operation form
+taskDisplayedSection.addEventListener("click", (event) => {
+    if (
+        event.target.classList.contains("edit-btn-logo") ||
+        event.target.classList.contains("edit-btn")
+    ) {
+        let taskCard = event.target.closest(".task-card");
+        let taskId = taskCard.dataset.id;
+        let taskIndex = allTasks.findIndex(
+            (taskItem) => taskItem.taskId == taskId,
         );
+        if (taskIndex !== -1) {
+            showTaskOperationScreen(true);
+            taskNameInput.value = allTasks.at(taskIndex).taskName;
+            taskCategoryInput.value = allTasks.at(taskIndex).taskCategory;
+            setUpdateMode(true);
+            updateIndex = taskIndex;
+        }
     }
-    ui(displayedTask);
 });
 
-//Event Capturing and Bubbling demo
+//complete the task 
+taskDisplayedSection.addEventListener("click", (event) => {
+    if(event.target.getAttribute("type") == "checkbox"){
+        let taskCard = event.target.closest(".task-card");
+        let taskId = taskCard.dataset.id;
+        let taskIndex = allTasks.findIndex(
+            (taskItem) => taskItem.taskId == taskId,
+        );
+        if(taskIndex !== -1) {
+            allTasks.at(taskIndex).isComplete = event.target.checked;
+            localStorage.setItem("all-tasks", JSON.stringify(allTasks));
+            if(filterTaskInput.value.trim() != "")
+            {
+                let filteredTasks = allTasks.filter(taskItem => taskItem.taskName.toLowerCase().includes(filterTaskInput.value.trim().toLowerCase()))
+                displayTasks(filteredTasks);
+            }else {
+                displayTasks(allTasks);
+            }
+        }
+    }
+});
+
+
+//Filtering the task
+filterTaskInput.addEventListener("input", (event) => {
+    let searchedText = filterTaskInput.value.trim();
+    if (searchedText == "") {
+        displayTasks(allTasks);
+    } else {
+        let filteredTasks = allTasks.filter((taskItem) =>
+            taskItem.taskName
+                .toLowerCase()
+                .includes(searchedText.toLowerCase()),
+        );
+        displayTasks(filteredTasks, allTasks.length > 0 ? true : false);
+
+    }
+});
+
+// Displaying the ui
+displayTasks();
+
+function toggleNoTaskPresentScreen(taskToDisplay = allTasks, isFiltered = false) {
+    if (taskToDisplay.length > 0) {
+        noTaskPresentScreen.style.display = "none";
+        return false;
+    } else {
+        noTaskPresentScreen.style.display = "flex";
+        if(isFiltered)
+        {
+            noTaskPresentScreenHeading.innerText = "No task found with that name!";
+        }else
+        {
+            noTaskPresentScreenHeading.innerText = "It seems there are no task added yet..";
+        }
+        return true;
+    }
+}
+
+function displayTasks(taskToDisplay = allTasks, isFiltered = false) {
+    let previouslyDisplayedTasks =
+        taskDisplayedSection.querySelectorAll(".task-card");
+    if (previouslyDisplayedTasks.length > 0) {
+        previouslyDisplayedTasks.forEach((previousTaskCard) =>
+            previousTaskCard.remove(),
+        );
+    }
+    if (toggleNoTaskPresentScreen(taskToDisplay, isFiltered)) {
+        return;
+    }
+    taskToDisplay.forEach((taskItem) => {
+        let taskCard = document.createElement("div");
+        taskCard.classList.add("task-card");
+        let isTaskCompleted = taskItem.isComplete;
+        taskCard.setAttribute("data-id", `${taskItem.taskId}`);
+        taskCard.setAttribute("data-category", `${taskItem.taskCategory}`);
+        taskCard.setAttribute(
+            "data-status",
+            `${isTaskCompleted ? "Complete" : "Incomplete"}`,
+        );
+        taskCard.innerHTML = `
+            <div class="task-details">
+                <input type="checkbox" ${isTaskCompleted ? "checked" : ""} />
+                <p ${isTaskCompleted ? 'class = "completed"' : ""}>${taskItem.taskName}</p>
+            </div>
+
+            <div class="task-actions">
+
+                <button class="edit-btn">
+                    <i class="ri-pencil-line edit-btn-logo"></i>
+                </button>
+
+                <button class="delete-btn">
+                    <i class="ri-delete-bin-7-line delete-btn-logo"></i>
+                </button>
+
+            </div>
+        `;
+        taskDisplayedSection.append(taskCard);
+    });
+}
+
+// Event Capturing and Bubbling demo
 //--Event Capturing
 document.body.addEventListener(
     "click",
@@ -253,7 +314,7 @@ themeToggleBtn.addEventListener(
     true,
 );
 
-//--Event Bubbling
+// --Event Bubbling
 document.body.addEventListener("click", () => {
     console.log("Body is Triggered");
 });
@@ -270,6 +331,6 @@ themeToggleBtn.addEventListener("click", () => {
     console.log("Theme Toggle button is triggered");
 });
 
-//input.value vs input.getAttribute("value")
-//--if we take example of searchTaskInput, when we use searchTaskInput.value, it will give us the current or live data typed by the user
-//--Where as if we use searchTaskInput.getAttribute("value"), it will give us initial default data defined in the original HTML. As we did not use value attribute in HTML for searchTaskInput so it will give us 'null'
+// input.value vs input.getAttribute("value")
+// --if we take example of searchTaskInput, when we use searchTaskInput.value, it will give us the current or live data typed by the user
+// --Where as if we use searchTaskInput.getAttribute("value"), it will give us initial default data defined in the original HTML. As we did not use value attribute in HTML for searchTaskInput so it will give us 'null'
