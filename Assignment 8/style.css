@@ -1,0 +1,728 @@
+/* cyrillic-ext */
+@font-face {
+    font-family: "Inter";
+    src: url("/assets/fonts/Inter_18pt-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+}
+/* cyrillic */
+:root {
+    --primary-color: #ffffff;
+    --secondary-color: #f8f9fb;
+    --border-color: #e5e7eb;
+    --nav-item-active-bg-color:#DBEAFE;
+    --nav-item-active-font-color: #1E40AF;
+    --transaction-btn-bg-color:#000000;
+    --primary-font-color:#000000;
+    --secondary-font-color:#6B7280;
+    --text-blue: #3068C6;
+    --bg-blue: #DBEAFE;
+    --text-green: #166534;
+    --bg-green: #DCFCE7;
+    --text-red: #991B1B;
+    --bg-red: #FEE2E2;
+    --chart-bg-color: #F8F9FB;
+    --login-bg-color: #F4F7F6;
+}
+.dark
+{
+    --primary-color: #1F2937;
+    --secondary-color: #111827;
+    --border-color: #e5e7eb;
+    --nav-item-active-bg-color:#374151;
+    --nav-item-active-font-color: #60A5FA;
+    --transaction-btn-bg-color:#3B82F6;
+    --primary-font-color:#ffffff;
+    --secondary-font-color:#9CA399;
+    --text-blue: #60A5FA;
+    --bg-blue: #374151;
+    --text-green: #166534;
+    --bg-green: #DCFCE7;
+    --text-red: #991B1B;
+    --bg-red: #FEE2E2;
+    --chart-bg-color: #111827;
+    --login-bg-color: #F4F7F6;
+    --chart-bg-color: #111827;
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+body {
+    font-family: "Inter";
+    position: relative;
+}
+.hide-ele {
+    display: none;
+    background-color: crimson;
+}
+.text-blue {
+    color: var(--text-blue);
+}
+.text-green {
+    color: var(--text-green);
+}
+.text-red {
+    color: var(--text-red);
+}
+.text-gray {
+    color: #CCCCCC;
+}
+
+.bg-blue {
+    background-color: var(--bg-blue);
+}
+.bg-green {
+    background-color: var(--bg-green);
+}
+.bg-red {
+    background-color:var(--bg-red)
+}
+
+/* Login Screen */
+#login-screen,
+#register-screen {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f5f5f5;
+}
+
+#register-screen {
+    display: none;
+}
+
+.auth-card {
+    width: 380px;
+    background: #fff;
+    padding: 30px 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.auth-card h2 {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 10px;
+}
+
+.auth-card > p:first-of-type {
+    text-align: center;
+    color: #444;
+    font-size: 1rem;
+    margin-bottom: 24px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #222;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    font-size: 15px;
+    border: 1px solid #cfcfcf;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+
+#login-screen input:focus {
+    border-color: #1565c0;
+    box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.15);
+}
+
+#register-screen input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
+}
+
+.login-btn,
+.register-btn {
+    width: 100%;
+    height: 42px;
+    margin-top: 6px;
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-btn {
+    background: #1565c0;
+}
+
+.login-btn:hover {
+    background: #0d47a1;
+}
+
+.register-btn {
+    background: #28a745;
+}
+
+.register-btn:hover {
+    background: #218838;
+}
+
+.bottom-text {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.bottom-text a {
+    color: #1565c0;
+    text-decoration: none;
+}
+
+.bottom-text a:hover {
+    text-decoration: underline;
+}
+
+main {
+    height: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    display: none;
+    grid-template-columns: 15% 85%;
+    grid-template-rows: 100%;
+    grid-template-areas: "sidebar main-content";
+}
+
+
+#sidebar {
+    grid-area: sidebar;
+    background-color: var(--primary-color);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+#main-content {
+    grid-area: main-content;
+    overflow-y: auto;
+    background-color: var(--secondary-color);
+    display: flex;
+    flex-direction: column;
+    overflow-x: auto;
+}
+
+#top-header {
+    /* grid-area: top-header; */
+    background-color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
+    padding:1rem 2.5rem;
+    color:var(--primary-font-color)
+}
+
+#dashboard {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 1rem;
+}
+
+/* side-bar */
+nav #top-section {
+    display: flex;
+    flex-direction: column;
+    align-self: flex-start;
+    gap: 3rem;
+    width: 100%;
+    padding: 0rem 0.5rem;
+}
+nav #top-section .logo {
+    height: fit-content;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: "Inter";
+}
+nav #top-section .logo > i {
+    font-size: 2.5rem;
+    color: var(--primary-font-color);
+}
+nav #top-section .logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary-font-color);
+}
+nav #top-section .logo p {
+    font-size: 1rem;
+    color:var(--secondary-font-color);
+}
+#nav-menu {
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#nav-menu > a {
+    text-decoration: none;
+    width: 100%;
+    padding: 0.7rem 1rem;
+    font-size: 1.4rem;
+    border-radius: 0.5rem;
+    word-spacing: 0.5rem;
+    color:var(--secondary-font-color);
+    transition: all ease 0.4s;
+}
+
+#nav-menu > a.nav-item-active  {
+    background-color: var(--nav-item-active-bg-color);
+    color: var(--nav-item-active-font-color);
+}
+#nav-menu > a:hover {
+    background-color: var(--nav-item-active-bg-color);
+    color: var(--nav-item-active-font-color);
+}
+
+#add-transaction-btn {
+    text-decoration: none;
+    background-color: var(--transaction-btn-bg-color);
+    color: white;
+    width: 100%;
+    padding: 1rem 0;
+    display: block;
+    text-align: center;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+}
+
+/* top-header */
+#top-header #username-display {
+    /* background-color: yellow; */
+    line-height: 1.5rem;
+    padding: 0 1.5rem;
+    border-left: 1px solid gray;
+}
+
+#top-header #logout-btn {
+    text-decoration: none;
+    color: var(--primary-font-color);
+    border: 2px solid var(--border-color);
+    padding: 0.5rem 1rem;
+    border-radius: 0.3rem;
+    font-weight: 600;
+}
+
+/* Dashboard */
+#dashboard-heading > h1 {
+    color: var(--primary-font-color);
+}
+#dashboard-heading > p {
+    color: var(--secondary-font-color);
+}
+#overview-cards {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+#overview-cards > .card {
+    background-color: var(--primary-color);
+    width: 23%;
+    height: 170px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    border:1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+#overview-cards > .card > p {
+    color: var(--secondary-font-color);
+}
+#displayBalance, #displayTransaction  {
+    color: var(--primary-font-color);
+}
+#overview-cards > .card > .icon {
+    font-size: 1.4rem;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;    
+    align-items: center;
+    border-radius: 0.5rem;
+}
+
+#dashboard-grid {
+    width: 100%;    
+    flex: 1;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: 
+    "left-column right-column";
+    gap: 1rem;
+}
+
+#left-column {
+    grid-area: left-column;
+}
+
+#right-column {
+    grid-area: right-column;
+}
+
+/* Left Column => Cash Flow Analysis and All Transactions */
+#left-column > div {
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+}
+#cash-flow-section{
+    width: 100%;
+    max-height: 350px;
+}
+#cash-flow-section > h1 {
+    color: var(--primary-font-color);
+}
+#cashFlowChart {
+    margin: 2rem 0;
+    background-color: var(--chart-bg-color);
+    border-radius: 0.5rem;
+}
+
+/* All Transactions */
+#transaction-section {
+    margin-top: 1rem;
+    width: 100%;
+}
+#transaction-section > h1 {
+    color: var(--primary-font-color);
+}
+#filtering-section {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 2fr;
+    grid-template-areas: "search-box filter-option";
+    gap: 1rem;
+    width: 100%;
+}
+#search-box {
+    grid-area: search-box;
+    background-color: var(--chart-bg-color);
+    color: var(--primary-font-color);
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 0.5rem;
+    font-size: 1.1rem;
+    padding: 0 0.5rem;
+}
+#search-box > input {
+    flex:1;
+    background-color: var(--chart-bg-color);  
+    color: var(--primary-font-color);  
+    border:none;
+    outline: none;
+    font-size: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+#transaction-type {
+    grid-area: filter-option;
+    border:1px solid var(--border-color);
+    border-radius: 0.5rem;
+    padding: 0.3rem;
+    background-color: var(--chart-bg-color);
+    color:var(--primary-font-color);
+}
+
+#transactions-table {
+    margin-top: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed; /* Keep this so percentages are strictly respected */
+}
+
+#transactions-table th, #transactions-table td {
+    border-bottom: 1px solid var(--border-color);
+    padding: 1rem;
+    text-align: left;
+}
+#transactions-table th {
+    color: var(--secondary-font-color);
+}
+
+#transactions-table td {
+    color: var(--primary-font-color);
+    max-width: 20%;
+    overflow-wrap: break-word; 
+    word-break: break-word; 
+}
+/* Right coloum => Preference box */
+#preferences-box {
+    padding: 1.5rem 1rem;
+    background-color: var(--primary-color);
+    border: 1px solid var(--border-color);  
+    border-radius: 0.5rem;
+}
+#preferences-box > h1 {
+    color: var(--primary-font-color);
+}
+#dark-mode-box {
+    margin: 1.5rem 0 1rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#dark-mode-box h2 {
+    font-size: 1rem;
+    color: var(--secondary-font-color);
+}
+#dark-mode-toogle-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#dark-mode-switch {
+    position: relative;
+    display: inline-block;
+    height: 2rem;
+    width: 4rem;
+    background-color: var(--border-color);
+    border-radius: 2rem;
+    cursor: pointer;
+
+}
+#dark-mode-switch::after {
+    content: "";
+    width: 1.7rem;
+    height: 1.7rem;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background-color: #ffffff;
+    transition: all ease 0.3s;
+}
+#dark-mode-toggle-btn:checked + #dark-mode-switch::after {
+    left: calc(100% - 1.7rem - 5%);
+}
+
+#dark-mode-toggle-btn:checked + #dark-mode-switch {
+    background-color: #3B82F6;
+}
+#dark-mode-toggle-btn {
+    display: none;
+}
+#reset-all-btn {
+    text-decoration: none;
+    margin-top: 1rem;
+    display: block;
+    width: 100%;
+    font-size: 1.2rem;
+    font-weight: 400;
+    text-align: center;
+    padding: 0.5rem 0;
+    border:1px solid #FFCCCC;
+    border-radius: 0.5rem;
+}
+
+/* Settings Screen  */
+#settings {
+    display: none;
+    padding: 1rem 1.5rem;
+}
+#settings-heading > h1 {
+    color: var(--primary-font-color);
+}
+#settings-heading > p {
+    color: var(--secondary-font-color);
+}
+#profile-details-form {
+    margin-top: 1rem;
+    background-color: var(--primary-color);
+    color: var(--primary-font-color);
+    padding: 1.5rem;
+    width: 66%;
+    border: 1px solid var(--border-color);
+    border-radius: 0.5rem;
+}
+#profile-details-form > div {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-template-areas: 
+    "username-label currency-label"
+    "username-chg-input currency-chg-select";
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+}
+#profile-details-form > div > label:nth-of-type(1) {
+    grid-area: username-label;
+}
+#profile-details-form > div > label:nth-of-type(1) {
+    grid-area: currency-label;
+}
+#profile-details-form > div > input {
+    grid-area: username-chg-input;
+}
+#profile-details-form > div > select {
+    grid-area: currency-chg-select;
+}
+#profile-details-form > div > input, #profile-details-form > div > select {
+    padding: .6rem;
+    border: none;
+    outline: none;
+    border-radius: .5rem;
+    background: var(--chart-bg-color);
+    font-size: 1rem;
+    color:var(--primary-font-color);
+}
+#change-profile-details-btn {
+    margin-top: 1rem;
+    background-color: var(--transaction-btn-bg-color);
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 0.5rem;
+    border:none;
+    cursor: pointer;
+}
+/* Add Transaction Screen */
+#add-transaction-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,.7);
+}
+
+#add-transaction-form {
+    width: 100%;
+    max-width: 400px;
+    background: var(--primary-color);
+    padding: 1rem;
+    border-radius: .5rem;
+    color: var(--primary-font-color);
+}
+#add-transaction-form select, #add-transaction-form input {
+    color: var(--primary-font-color);
+}
+#heading-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#heading-section i {
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#add-transaction-form label {
+    display: inline-block;
+    margin: .8rem 0 .3rem;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: .6rem;
+    border: none;
+    outline: none;
+    border-radius: .5rem;
+    background: var(--chart-bg-color);
+    font-size: 1rem;
+}
+
+/* Amount & Date section */
+#amount-date-section {
+    margin-top: .8rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "amount-label date-label"
+        "amount-input date-input";
+    gap: .5rem;
+}
+
+#amount-date-section label:nth-of-type(1) {
+    grid-area: amount-label;
+}
+
+#amount-date-section label:nth-of-type(2) {
+    grid-area: date-label;
+}
+
+#trans-amount-input {
+    grid-area: amount-input;
+}
+
+#trans-date {
+    grid-area: date-input;
+    color: var(--primary-font-color);
+}
+
+/* Only amount & date inputs */
+#amount-date-section input {
+    width: 100%;
+    padding: .6rem;
+    border: 1px solid var(--border-color);
+    border-radius: .5rem;
+    outline: none;
+    font-size: 1rem;
+    background: var(--primary-color);
+}
+
+#trans-add-btn {
+    width: 100%;
+    margin-top: 1rem;
+    padding: .7rem;
+    border: none;
+    border-radius: .5rem;
+    background: var(--transaction-btn-bg-color);
+    color: #fff;
+    font-size: 1rem;
+    cursor: pointer;
+}
+
