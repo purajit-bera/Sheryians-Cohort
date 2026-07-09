@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Productivity Assistent</title>
+        <link rel="stylesheet" href="styles.css" />
+        <link
+            href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+            rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://rsms.me/" />
+        <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    </head>
+    <body>
+        <!-- ==================Header==================== -->
+        <header>
+            <div class="left">
+                <div class="logo">
+                    <div id="icon">⚡</div>
+                    <h1>Productivity</h1>
+                </div>
+            </div>
+            <div class="middle">
+                <div class="time">
+                    <h1 id="current-time">11:30:04 AM</h1>
+                    <p id="today-date">Monday, July 6, 2026</p>
+                </div>
+            </div>
+            <div class="right">
+                <div class="weather">
+                    <div id="weather-icon">🌥️</div>
+                    <div id="weather-condition">
+                        <div id="temparature">30<sup>°</sup>C</div>
+                        <div id="sky-condition">Mostly Cloudy</div>
+                    </div>
+                </div>
+                <div class="theme-toggle">
+                    <input type="checkbox" name="" id="theme-toggle-checkbox" />
+                    <label
+                        for="theme-toggle-checkbox"
+                        id="theme-toggle-box"
+                    ></label>
+                </div>
+            </div>
+        </header>
+        <!-- ==================App Content==================== -->
+        <main id="app-content">
+            <section id="dashboard" class="hidden">
+                <article class="feature-card" data-feature="todo-list">
+                    <div class="feature-icon bg-blue">📋</div>
+                    <div class="feature-name">Todo List</div>
+                    <div class="feature-description">
+                        Create tasks, mark them important, and track completion.
+                        Your personal productivity companion.
+                    </div>
+                </article>
+                <article class="feature-card" data-feature="daily-planner">
+                    <div class="feature-icon bg-green">📅</div>
+                    <div class="feature-name">Daily Planner</div>
+                    <div class="feature-description">
+                        Organize your day with hourly time slots. Assign tasks
+                        and notes to specific hours.
+                    </div>
+                </article>
+                <article class="feature-card" data-feature="daily-goals">
+                    <div class="feature-icon bg-orange">🎯</div>
+                    <div class="feature-name">Daily Goals</div>
+                    <div class="feature-description">
+                        Set short-term goals, track progress, and celebrate your
+                        daily achievements.
+                    </div>
+                </article>
+                <article class="feature-card" data-feature="pomodoro-timer">
+                    <div class="feature-icon bg-pink">⏱️</div>
+                    <div class="feature-name">Pomodoro Timer</div>
+                    <div class="feature-description">
+                        Focus in 25-minute sessions with timed breaks. Built on
+                        the proven Pomodoro technique.
+                    </div>
+                </article>
+                <article class="feature-card" data-feature="motivation">
+                    <div class="feature-icon bg-light-blue">💡</div>
+                    <div class="feature-name">Motivation</div>
+                    <div class="feature-description">
+                        Get inspired with curated motivational quotes. Refresh
+                        anytime for a new boost of energy.
+                    </div>
+                </article>
+            </section>
+            <section id="todo-list" class="hidden">
+                <div class="heading">
+                    <button class="back-btn" id="todo-list-back-btn">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                    <h2>📋 Todo List</h2>
+                </div>
+                <form action="" id="todo-list-form">
+                    <input
+                        type="text"
+                        id="task-name-input"
+                        autocomplete="off"
+                        placeholder="What need to be done?"
+                    />
+                    <button type="submit">Add Task</button>
+                </form>
+                <div id="todo-list-filter-sec">
+                    <button
+                        id="all-tasks"
+                        class="active-task-filter"
+                        data-filter="all"
+                    >
+                        All
+                    </button>
+                    <button id="active-tasks" data-filter="active">
+                        Active
+                    </button>
+                    <button id="important-tasks" data-filter="important">
+                        Important
+                    </button>
+                    <button id="completed-tasks" data-filter="completed">
+                        Completed
+                    </button>
+                </div>
+                <div id="task-list-container"></div>
+            </section>
+            <section id="daily-planner">
+                <div class="heading">
+                    <button class="back-btn" id="daily-planner-back-btn">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                    <h2>📅 Daily Planner</h2>
+                </div>
+                <div id="date-section">
+                    <p>📅 <span id="planner-current-date">July 08, 2026</span>--Today</p>
+                </div>
+                <div id="planner-container">
+                </div>
+            </section>
+            <section id="daily-goals" class="hidden">
+                <div class="heading">
+                    <button class="back-btn" id="daily-goals-back-btn">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                    <h2>🎯 Daily Goals</h2>
+                </div>
+            </section>
+            <section id="pomodoro-timer" class="hidden">
+                <div class="heading">
+                    <button class="back-btn" id="pomodoro-timer-back-btn">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                    <h2>⏱️ Pomodoro Timer</h2>
+                </div>
+            </section>
+            <section id="motivation" class="hidden">
+                <div class="heading">
+                    <button class="back-btn" id="motivation-back-btn">
+                        <i class="ri-arrow-left-long-line"></i>
+                    </button>
+                    <h2>💡 Motivation</h2>
+                </div>
+            </section>
+        </main>
+        <script src="script.js"></script>
+    </body>
+</html>
