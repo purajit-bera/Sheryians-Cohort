@@ -283,7 +283,7 @@ todoListFilterSec.addEventListener("click", (event) => {
 // ======================================
 const plannerCurrentDate = document.querySelector("#planner-current-date");
 function updatePlannerCurrentDate() {
-    const plannersDate = loadDailyPlansDate();
+    let plannersDate = loadDailyPlansDate();
     if(!plannersDate){
         plannersDate = formatDate(getCurrentDate());
     }
