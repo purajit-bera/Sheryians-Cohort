@@ -3,17 +3,41 @@
 // ======================================
 const dashboard = document.querySelector("#dashboard");
 const dashboardBackBtns = document.querySelectorAll("section .back-btn");
-const currentDate = new Date();
-const currentHour = currentDate.getHours();
+const currentTimeH1 = document.querySelector("#current-time");
+const todayDateP = document.querySelector("#today-date");
+const themeToggleCheckbox = document.querySelector("#theme-toggle-checkbox");
+let appTheme = loadTheme();
 // ======================================
 // Application State
 // ======================================
+function applyTheme() {
+    if(appTheme === "light") {
+        document.body.classList.remove("dark");
+        themeToggleCheckbox.checked = false;
+    }else
+    {
+        document.body.classList.add("dark");
+        themeToggleCheckbox.checked = true;
+    }
+}
+applyTheme();
+themeToggleCheckbox.addEventListener("change", () => {
+    if(themeToggleCheckbox.checked) {
+        appTheme = "dark";
+    }else {
+        appTheme = "light";
+    }
+    applyTheme();
+    saveTheme(appTheme);
+})
 
-// Variables that represent the current state
-// Example:
-// currentView
-// currentTheme
-
+function updateClock() {
+    const currentDate = getCurrentDate();
+    currentTimeH1.innerText = formatClockTime(currentDate);
+    todayDateP.innerText = formatDate(currentDate);
+}
+updateClock();
+setInterval(updateClock, 1000);
 // ======================================
 // Utility Functions
 // ======================================
@@ -23,7 +47,54 @@ function hideElement(element) {
 function showElement(element) {
     element.classList.remove("hidden");
 }
+function getCurrentDate() {
+    return new Date();
+}
+function isCurrentHour(hourInNumber) {
+    return hourInNumber === getCurrentDate().getHours();
+}
+function formatTime(hourInNumber) {
+    const meridiem = hourInNumber < 12 ? "AM" : "PM";
+    let hour;
+    if (hourInNumber === 0) {
+        hour = 12;
+    } else if (hourInNumber <= 12) hour = hourInNumber;
+    else hour = hourInNumber % 12;
 
+    return `${hour} ${meridiem}`;
+}
+function formatClockTime(dateParm) {
+    const date = new Date(dateParm);
+    const hourIn24HrsFormat = date.getHours();
+    const [hour, meridiem] = formatTime(hourIn24HrsFormat).split(" ");
+    const mins = String(date.getMinutes()).padStart(2,0);
+    const secs = String(date.getSeconds()).padStart(2, 0);
+    return `${hour}:${mins}:${secs} ${meridiem}`;
+}
+
+function formatDate(date) {
+    const fullDay = date.toLocaleDateString("en-us", {weekday:"long"});
+    const day = date.getDate();
+    const monthFull = date.toLocaleDateString("en-us", {month:"long"});
+    const year = date.getFullYear();
+    return`${fullDay}, ${monthFull} ${day}, ${year}`;
+}
+
+//----------------Local Storage
+//-----Theme 
+function loadTheme() {
+    const theme = localStorage.getItem("app-theme");
+    if(!theme) {
+        localStorage.setItem("app-theme", "light");
+        return "light";
+    }
+    return theme;
+}
+function saveTheme(value) {
+    localStorage.setItem("app-theme", value);
+}
+
+//---To Do list
 function loadTasks() {
     const tasks = JSON.parse(localStorage.getItem("all-todo-list-tasks"));
     if (!tasks) {
@@ -36,19 +107,41 @@ function saveTasks(tasks) {
     localStorage.setItem("all-todo-list-tasks", JSON.stringify(tasks));
 }
 
-function isCurrentHour(hourInNumber) {
-    return hourInNumber === currentHour;
+//---Daily Planner
+function loadDailyPlansDate() {
+    return localStorage.getItem("dailyPlansDate");
+    
 }
-function formatTime(hourInNumber) {
-    const meridiem = hourInNumber < 12 ? "AM" : "PM";
-    let hour;
-    if (hourInNumber === 0) {
-        hour = 12;
-    } else if (hourInNumber <= 12) hour = hourInNumber;
-    else hour = hourInNumber % 12;
+function saveDailyPlansDate(dateValue) {
+    localStorage.setItem("dailyPlansDate",dateValue);
+}
 
-    return `${hour} ${meridiem}`;
+function loadDailyPlans() {
+    const currentDate = getCurrentDate();
+    let plansDate = loadDailyPlansDate();
+    const todayDate = formatDate(currentDate);
+    if(plansDate == null){
+        saveDailyPlansDate(todayDate);
+        return [];
+    }
+    else if(plansDate !== todayDate) {
+        saveDailyPlansDate(todayDate);
+        return [];
+    }
+    else 
+    {
+        const plannerEntries =  JSON.parse(localStorage.getItem("plannerEntriesData"));
+        if(!plannerEntries) {
+            return [];
+        }
+        return plannerEntries;
+    }
+
 }
+function saveDailyPlans(plannerEntries) {
+    localStorage.setItem("plannerEntriesData", JSON.stringify(plannerEntries));
+}
+
 // ======================================
 // Navigation
 // ======================================
@@ -188,30 +281,51 @@ todoListFilterSec.addEventListener("click", (event) => {
 // ======================================
 // Daily Planner
 // ======================================
-let plannerEntries = [];
+const plannerCurrentDate = document.querySelector("#planner-current-date");
+function updatePlannerCurrentDate() {
+    const plannersDate = loadDailyPlansDate();
+    if(!plannersDate){
+        plannersDate = formatDate(currentDate);
+    }
+    plannerCurrentDate.innerText = plannersDate;
+}
+updatePlannerCurrentDate();
+let plannerEntries = loadDailyPlans();
 const plannerContainer = document.querySelector("#planner-container");
-for (let i = 0; i < 24; i++) {
-    const newEntry = {
-        hour: i,
-        planName: "",
-        isComplete: false,
-    };
-    plannerEntries.push(newEntry);
+if(plannerEntries.length === 0) {
+    for (let i = 0; i < 24; i++) {
+        const newEntry = {
+            hour: i,
+            planName: "",
+            isComplete: false,
+        };
+        plannerEntries.push(newEntry);
+    }   
+    saveDailyPlans(plannerEntries);
 }
 
 displayPlannerList(plannerEntries);
 
 function getPlannerCardState(entry) {
     let state = "";
-
     if (entry.isComplete) {
         state = "planner-card-complete";
     } else if (isCurrentHour(entry.hour)) {
         state = "planner-card-current-hour";
-    } else if (entry.planName.trim() !== "" && entry.hour < currentHour) {
+    } else if (entry.planName.trim() !== "" && entry.hour < getCurrentDate().getHours()) {
         state = "planner-card-unfinished";
     }
     return state;
+}
+function refreshPlannerCard(plannerCard, plannerEntry) {
+    plannerCard.classList.remove("planner-card-complete", "planner-card-current-hour", "planner-card-unfinished");
+    const state = getPlannerCardState(plannerEntry);
+    if(state !== "")
+        plannerCard.classList.add(state);
+}
+function adjustPlannerTextareaHeights(plannerTextArea) {
+        plannerTextArea.style.height = "auto";
+        plannerTextArea.style.height = `${plannerTextArea.scrollHeight}px`;
 }
 //--------------Displaying all Planner--------------
 function displayPlannerList(plannerList) {
@@ -239,36 +353,50 @@ function displayPlannerList(plannerList) {
                             />
                         </div>
                     </article>`;
+        const addedPlannerCard = plannerContainer.lastElementChild;
+        const plannerTextArea = addedPlannerCard.querySelector(".plan-name");
+        adjustPlannerTextareaHeights(plannerTextArea);
     });
 }
-const textarea = document.querySelector(".plan-name");
 
-console.log(textarea.rows);
 //--------------Editing Plan name---------------
 plannerContainer.addEventListener("input", (event) => {
     if (event.target.classList.contains("plan-name")) {
         const plannerCard = event.target.closest(".planner-card");
         const hour = plannerCard.dataset.hour;
         const inputValue = event.target.value.trim();
-        if (inputValue !== "") {
-            const plannerEntry = plannerEntries.find(
-                (entry) => entry.hour === Number(hour),
-            );
-            plannerEntry.planName = inputValue;
-        }
-        console.log("before")
-        console.log("scrollHeight:", event.target.scrollHeight);
-        console.log("clientHeight:", event.target.clientHeight);
-        console.log("offsetHeight:", event.target.offsetHeight);
-        event.target.style.height = "auto";
-        event.target.style.height = `${event.target.scrollHeight}px`;
-        console.log("after");
-        console.log("scrollHeight:", event.target.scrollHeight);
-        console.log("clientHeight:", event.target.clientHeight);
-        console.log("offsetHeight:", event.target.offsetHeight);
+        const plannerEntry = plannerEntries.find(
+            (entry) => entry.hour === Number(hour),
+        );
+        plannerEntry.planName = inputValue;
+        adjustPlannerTextareaHeights(event.target);
+        saveDailyPlans(plannerEntries);
+    }
+});
+plannerContainer.addEventListener("change", (event) => {
+    if (event.target.classList.contains("plan-name")) {
+        const plannerCard = event.target.closest(".planner-card");
+        const hour = plannerCard.dataset.hour;
+        const plannerEntry = plannerEntries.find(
+            (entry) => entry.hour === Number(hour),
+        );
+        refreshPlannerCard(plannerCard, plannerEntry);
     }
 });
 
+//------------Completing a plan----------------------
+plannerContainer.addEventListener("click", (event)=> {
+    if (event.target.classList.contains("plan-complete-checkbox")) {
+        const plannerCard = event.target.closest(".planner-card");
+        const hour = plannerCard.dataset.hour;
+        const plannerEntry = plannerEntries.find(
+                (entry) => entry.hour === Number(hour),
+            );
+        plannerEntry.isComplete = !plannerEntry.isComplete;
+        refreshPlannerCard(plannerCard, plannerEntry);
+        saveDailyPlans(plannerEntries);
+    }
+});
 // ======================================
 // Daily Goals
 // ======================================
