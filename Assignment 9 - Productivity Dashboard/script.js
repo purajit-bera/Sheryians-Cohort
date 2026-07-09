@@ -285,7 +285,7 @@ const plannerCurrentDate = document.querySelector("#planner-current-date");
 function updatePlannerCurrentDate() {
     const plannersDate = loadDailyPlansDate();
     if(!plannersDate){
-        plannersDate = formatDate(currentDate);
+        plannersDate = formatDate(getCurrentDate());
     }
     plannerCurrentDate.innerText = plannersDate;
 }
