@@ -11,25 +11,24 @@ let appTheme = loadTheme();
 // Application State
 // ======================================
 function applyTheme() {
-    if(appTheme === "light") {
+    if (appTheme === "light") {
         document.body.classList.remove("dark");
         themeToggleCheckbox.checked = false;
-    }else
-    {
+    } else {
         document.body.classList.add("dark");
         themeToggleCheckbox.checked = true;
     }
 }
 applyTheme();
 themeToggleCheckbox.addEventListener("change", () => {
-    if(themeToggleCheckbox.checked) {
+    if (themeToggleCheckbox.checked) {
         appTheme = "dark";
-    }else {
+    } else {
         appTheme = "light";
     }
     applyTheme();
     saveTheme(appTheme);
-})
+});
 
 function updateClock() {
     const currentDate = getCurrentDate();
@@ -38,6 +37,63 @@ function updateClock() {
 }
 updateClock();
 setInterval(updateClock, 1000);
+
+//--Weather
+const weatherIcon = document.querySelector("#weather-icon");
+const temperature = document.querySelector("#weather-condition>#temparature");
+const skyCondition = document.querySelector(
+    "#weather-condition>#sky-condition",
+);
+function updateWeatherUI(weatherData) {
+    weatherIcon.className = "";
+    if (weatherData) {
+        const currentWeather = weatherData.current;
+        const temperatureValue = currentWeather.temperature_2m;
+        const { description, icon } = getWeatherInfo(
+            currentWeather.weather_code,
+        );
+        weatherIcon.classList.add(icon);
+        temperature.innerHTML = `${temperatureValue}<sup>°</sup>C`;
+        skyCondition.innerText = description;
+    }
+    else{
+        weatherIcon.classList.add("ri-map-pin-user-line");
+        temperature.innerText = "--";
+        skyCondition.innerText = "Unknown";
+    }
+}
+async function fetchWeather(latitude, longitude) {
+    try {
+        const weatherDataResponse = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&forecast_days=1`,
+        );
+        if (!weatherDataResponse.ok) {
+            throw new Error("Could not fetch the weather API response!");
+        }
+        const weatherData = await weatherDataResponse.json();
+        return weatherData;
+    } catch (error) {
+        console.log("Error while fetching weather:", error);
+        return null;
+    }
+}
+
+function initializeWeather() {
+    async function success(position) {
+        const coordinates = position.coords;
+        const { latitude, longitude } = coordinates;
+        const weatherData = await fetchWeather(latitude, longitude);
+        updateWeatherUI(weatherData);
+    }
+    function error(err) {
+        console.warn(`Error ${err.code}: ${err.message}`);
+        updateWeatherUI(null);
+    }
+    navigator.geolocation.getCurrentPosition(success, error);
+}
+initializeWeather();
+setInterval(() => initializeWeather, 3600000);
+
 // ======================================
 // Utility Functions
 // ======================================
@@ -67,24 +123,109 @@ function formatClockTime(dateParm) {
     const date = new Date(dateParm);
     const hourIn24HrsFormat = date.getHours();
     const [hour, meridiem] = formatTime(hourIn24HrsFormat).split(" ");
-    const mins = String(date.getMinutes()).padStart(2,0);
+    const mins = String(date.getMinutes()).padStart(2, 0);
     const secs = String(date.getSeconds()).padStart(2, 0);
     return `${hour}:${mins}:${secs} ${meridiem}`;
 }
 
 function formatDate(date) {
-    const fullDay = date.toLocaleDateString("en-us", {weekday:"long"});
+    const fullDay = date.toLocaleDateString("en-us", { weekday: "long" });
     const day = date.getDate();
-    const monthFull = date.toLocaleDateString("en-us", {month:"long"});
+    const monthFull = date.toLocaleDateString("en-us", { month: "long" });
     const year = date.getFullYear();
-    return`${fullDay}, ${monthFull} ${day}, ${year}`;
+    return `${fullDay}, ${monthFull} ${day}, ${year}`;
+}
+function getWeatherInfo(code) {
+    switch (code) {
+        // Clear sky
+        case 0:
+            return {
+                description: "Clear Sky",
+                icon: "ri-sun-fill",
+            };
+
+        // Mainly clear, partly cloudy
+        case 1:
+        case 2:
+            return {
+                description: "Partly Cloudy",
+                icon: "ri-sun-cloudy-fill",
+            };
+
+        // Overcast
+        case 3:
+            return {
+                description: "Overcast",
+                icon: "ri-cloudy-fill",
+            };
+
+        // Fog
+        case 45:
+        case 48:
+            return {
+                description: "Fog",
+                icon: "ri-mist-fill",
+            };
+
+        // Drizzle
+        case 51:
+        case 53:
+        case 55:
+        case 56:
+        case 57:
+            return {
+                description: "Drizzle",
+                icon: "ri-drizzle-fill",
+            };
+
+        // Rain
+        case 61:
+        case 63:
+        case 65:
+        case 66:
+        case 67:
+        case 80:
+        case 81:
+        case 82:
+            return {
+                description: "Rain",
+                icon: "ri-rainy-fill",
+            };
+
+        // Snow
+        case 71:
+        case 73:
+        case 75:
+        case 77:
+        case 85:
+        case 86:
+            return {
+                description: "Snow",
+                icon: "ri-snowy-fill",
+            };
+
+        // Thunderstorm
+        case 95:
+        case 96:
+        case 99:
+            return {
+                description: "Thunderstorm",
+                icon: "ri-thunderstorms-fill",
+            };
+
+        default:
+            return {
+                description: "Unknown",
+                icon: "ri-cloud-line",
+            };
+    }
 }
 
 //----------------Local Storage
-//-----Theme 
+//-----Theme
 function loadTheme() {
     const theme = localStorage.getItem("app-theme");
-    if(!theme) {
+    if (!theme) {
         localStorage.setItem("app-theme", "light");
         return "light";
     }
@@ -110,33 +251,30 @@ function saveTasks(tasks) {
 //---Daily Planner
 function loadDailyPlansDate() {
     return localStorage.getItem("dailyPlansDate");
-    
 }
 function saveDailyPlansDate(dateValue) {
-    localStorage.setItem("dailyPlansDate",dateValue);
+    localStorage.setItem("dailyPlansDate", dateValue);
 }
 
 function loadDailyPlans() {
     const currentDate = getCurrentDate();
     let plansDate = loadDailyPlansDate();
     const todayDate = formatDate(currentDate);
-    if(plansDate == null){
+    if (plansDate == null) {
         saveDailyPlansDate(todayDate);
         return [];
-    }
-    else if(plansDate !== todayDate) {
+    } else if (plansDate !== todayDate) {
         saveDailyPlansDate(todayDate);
         return [];
-    }
-    else 
-    {
-        const plannerEntries =  JSON.parse(localStorage.getItem("plannerEntriesData"));
-        if(!plannerEntries) {
+    } else {
+        const plannerEntries = JSON.parse(
+            localStorage.getItem("plannerEntriesData"),
+        );
+        if (!plannerEntries) {
             return [];
         }
         return plannerEntries;
     }
-
 }
 function saveDailyPlans(plannerEntries) {
     localStorage.setItem("plannerEntriesData", JSON.stringify(plannerEntries));
@@ -284,7 +422,7 @@ todoListFilterSec.addEventListener("click", (event) => {
 const plannerCurrentDate = document.querySelector("#planner-current-date");
 function updatePlannerCurrentDate() {
     let plannersDate = loadDailyPlansDate();
-    if(!plannersDate){
+    if (!plannersDate) {
         plannersDate = formatDate(getCurrentDate());
     }
     plannerCurrentDate.innerText = plannersDate;
@@ -292,7 +430,7 @@ function updatePlannerCurrentDate() {
 updatePlannerCurrentDate();
 let plannerEntries = loadDailyPlans();
 const plannerContainer = document.querySelector("#planner-container");
-if(plannerEntries.length === 0) {
+if (plannerEntries.length === 0) {
     for (let i = 0; i < 24; i++) {
         const newEntry = {
             hour: i,
@@ -300,7 +438,7 @@ if(plannerEntries.length === 0) {
             isComplete: false,
         };
         plannerEntries.push(newEntry);
-    }   
+    }
     saveDailyPlans(plannerEntries);
 }
 
@@ -312,20 +450,26 @@ function getPlannerCardState(entry) {
         state = "planner-card-complete";
     } else if (isCurrentHour(entry.hour)) {
         state = "planner-card-current-hour";
-    } else if (entry.planName.trim() !== "" && entry.hour < getCurrentDate().getHours()) {
+    } else if (
+        entry.planName.trim() !== "" &&
+        entry.hour < getCurrentDate().getHours()
+    ) {
         state = "planner-card-unfinished";
     }
     return state;
 }
 function refreshPlannerCard(plannerCard, plannerEntry) {
-    plannerCard.classList.remove("planner-card-complete", "planner-card-current-hour", "planner-card-unfinished");
+    plannerCard.classList.remove(
+        "planner-card-complete",
+        "planner-card-current-hour",
+        "planner-card-unfinished",
+    );
     const state = getPlannerCardState(plannerEntry);
-    if(state !== "")
-        plannerCard.classList.add(state);
+    if (state !== "") plannerCard.classList.add(state);
 }
 function adjustPlannerTextareaHeights(plannerTextArea) {
-        plannerTextArea.style.height = "auto";
-        plannerTextArea.style.height = `${plannerTextArea.scrollHeight}px`;
+    plannerTextArea.style.height = "auto";
+    plannerTextArea.style.height = `${plannerTextArea.scrollHeight}px`;
 }
 //--------------Displaying all Planner--------------
 function displayPlannerList(plannerList) {
@@ -385,13 +529,13 @@ plannerContainer.addEventListener("change", (event) => {
 });
 
 //------------Completing a plan----------------------
-plannerContainer.addEventListener("click", (event)=> {
+plannerContainer.addEventListener("click", (event) => {
     if (event.target.classList.contains("plan-complete-checkbox")) {
         const plannerCard = event.target.closest(".planner-card");
         const hour = plannerCard.dataset.hour;
         const plannerEntry = plannerEntries.find(
-                (entry) => entry.hour === Number(hour),
-            );
+            (entry) => entry.hour === Number(hour),
+        );
         plannerEntry.isComplete = !plannerEntry.isComplete;
         refreshPlannerCard(plannerCard, plannerEntry);
         saveDailyPlans(plannerEntries);

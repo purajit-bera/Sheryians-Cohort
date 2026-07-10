@@ -160,6 +160,7 @@ header {
 }
 #weather-icon {
     font-size: 1.5rem;
+    color: var(--box-color);
 }
 #temparature {
     font-weight: 600;
