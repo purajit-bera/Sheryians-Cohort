@@ -509,3 +509,51 @@ section > .heading > h2 {
 .plan-time-current-hour {
     color:var(--box-color) !important;
 }
+
+
+
+/* ------------------Motivational Quote------------*/
+#motivation {
+    width: 100%;
+}
+#motivation-container {
+    margin-top: 3rem;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+}
+#motivation-card {
+    width: 50%;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+#motivation-card > h1 {
+    font-size: 1.3rem;
+    text-align: center;
+    color: var(--primary-font-color);
+}
+#motivation-quote {
+    font-weight: 400;
+}
+#motivation-card > p {
+    font-size: 0.9rem;
+    color:var(--text-gray);
+}
+#quote-generate-btn {
+    padding: 0.7rem 1rem;
+    font-weight: bold;
+    background-color: var(--box-color);
+    color: var(--white-color);
+    border:none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}

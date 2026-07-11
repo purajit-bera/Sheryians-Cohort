@@ -5,94 +5,11 @@ const dashboard = document.querySelector("#dashboard");
 const dashboardBackBtns = document.querySelectorAll("section .back-btn");
 const currentTimeH1 = document.querySelector("#current-time");
 const todayDateP = document.querySelector("#today-date");
-const themeToggleCheckbox = document.querySelector("#theme-toggle-checkbox");
-let appTheme = loadTheme();
+
 // ======================================
 // Application State
 // ======================================
-function applyTheme() {
-    if (appTheme === "light") {
-        document.body.classList.remove("dark");
-        themeToggleCheckbox.checked = false;
-    } else {
-        document.body.classList.add("dark");
-        themeToggleCheckbox.checked = true;
-    }
-}
-applyTheme();
-themeToggleCheckbox.addEventListener("change", () => {
-    if (themeToggleCheckbox.checked) {
-        appTheme = "dark";
-    } else {
-        appTheme = "light";
-    }
-    applyTheme();
-    saveTheme(appTheme);
-});
 
-function updateClock() {
-    const currentDate = getCurrentDate();
-    currentTimeH1.innerText = formatClockTime(currentDate);
-    todayDateP.innerText = formatDate(currentDate);
-}
-updateClock();
-setInterval(updateClock, 1000);
-
-//--Weather
-const weatherIcon = document.querySelector("#weather-icon");
-const temperature = document.querySelector("#weather-condition>#temparature");
-const skyCondition = document.querySelector(
-    "#weather-condition>#sky-condition",
-);
-function updateWeatherUI(weatherData) {
-    weatherIcon.className = "";
-    if (weatherData) {
-        const currentWeather = weatherData.current;
-        const temperatureValue = currentWeather.temperature_2m;
-        const { description, icon } = getWeatherInfo(
-            currentWeather.weather_code,
-        );
-        weatherIcon.classList.add(icon);
-        temperature.innerHTML = `${temperatureValue}<sup>°</sup>C`;
-        skyCondition.innerText = description;
-    }
-    else{
-        weatherIcon.classList.add("ri-map-pin-user-line");
-        temperature.innerText = "--";
-        skyCondition.innerText = "Unknown";
-    }
-}
-async function fetchWeather(latitude, longitude) {
-    try {
-        const weatherDataResponse = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&forecast_days=1`,
-        );
-        if (!weatherDataResponse.ok) {
-            throw new Error("Could not fetch the weather API response!");
-        }
-        const weatherData = await weatherDataResponse.json();
-        return weatherData;
-    } catch (error) {
-        console.log("Error while fetching weather:", error);
-        return null;
-    }
-}
-
-function initializeWeather() {
-    async function success(position) {
-        const coordinates = position.coords;
-        const { latitude, longitude } = coordinates;
-        const weatherData = await fetchWeather(latitude, longitude);
-        updateWeatherUI(weatherData);
-    }
-    function error(err) {
-        console.warn(`Error ${err.code}: ${err.message}`);
-        updateWeatherUI(null);
-    }
-    navigator.geolocation.getCurrentPosition(success, error);
-}
-initializeWeather();
-setInterval(() => initializeWeather, 3600000);
 
 // ======================================
 // Utility Functions
@@ -552,19 +469,138 @@ plannerContainer.addEventListener("click", (event) => {
 // ======================================
 // Motivation Quotes
 // ======================================
+const motivationalQuote = document.querySelector("#motivation-quote");
+const motivationalAuthor = document.querySelector("#motivation-author");
+const refreshQuoteBtn = document.querySelector("#motivation-container #quote-generate-btn");
+loadMotivationalQuote();
+function updateMotivationUI(quoteData) {
+    if(quoteData) {
+        motivationalQuote.innerText = quoteData.quote;
+        motivationalAuthor.innerText = quoteData.author;
+    }else {
+        motivationalQuote.innerText = "Unavailable!";
+        motivationalAuthor.innerText = "Unknown";
+    }
+}
+refreshQuoteBtn.addEventListener("click", async () => {
+    refreshQuoteBtn.disabled = true;
+    refreshQuoteBtn.innerText = "✨ Fetching...";
+    await loadMotivationalQuote();
+    refreshQuoteBtn.innerText = "✨ Refresh Quote";
+    refreshQuoteBtn.disabled = false;
+})
+
+async function fetchQuote() {
+    try {
+        const response = await fetch("https://motivational-spark-api.vercel.app/api/quotes/random");
+        if (!response.ok) {
+            throw new Error("Could not fetch Motivational Quote Response!");
+        }
+        const quoteData = await response.json();
+        return {
+            quote: quoteData.quote,
+            author: quoteData.author
+        };
+    } catch (error) {
+        return null;
+    }
+}
+async function loadMotivationalQuote() {
+    const quoteData = await fetchQuote();
+    updateMotivationUI(quoteData);
+}
 
 // ======================================
 // Weather
 // ======================================
 
+const weatherIcon = document.querySelector("#weather-icon");
+const temperature = document.querySelector("#weather-condition>#temparature");
+const skyCondition = document.querySelector(
+    "#weather-condition>#sky-condition",
+);
+function updateWeatherUI(weatherData) {
+    weatherIcon.className = "";
+    if (weatherData) {
+        const currentWeather = weatherData.current;
+        const temperatureValue = currentWeather.temperature_2m;
+        const { description, icon } = getWeatherInfo(
+            currentWeather.weather_code,
+        );
+        weatherIcon.classList.add(icon);
+        temperature.innerHTML = `${temperatureValue}<sup>°</sup>C`;
+        skyCondition.innerText = description;
+    } else {
+        weatherIcon.classList.add("ri-map-pin-user-line");
+        temperature.innerText = "--";
+        skyCondition.innerText = "Unknown";
+    }
+}
+async function fetchWeather(latitude, longitude) {
+    try {
+        const weatherDataResponse = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weather_code&forecast_days=1`,
+        );
+        if (!weatherDataResponse.ok) {
+            throw new Error("Could not fetch the weather API response!");
+        }
+        const weatherData = await weatherDataResponse.json();
+        return weatherData;
+    } catch (error) {
+        console.log("Error while fetching weather:", error);
+        return null;
+    }
+}
+
+function initializeWeather() {
+    async function success(position) {
+        const coordinates = position.coords;
+        const { latitude, longitude } = coordinates;
+        const weatherData = await fetchWeather(latitude, longitude);
+        updateWeatherUI(weatherData);
+    }
+    function error(err) {
+        console.warn(`Error ${err.code}: ${err.message}`);
+        updateWeatherUI(null);
+    }
+    navigator.geolocation.getCurrentPosition(success, error);
+}
+initializeWeather();
+setInterval(initializeWeather, 3600000);
 // ======================================
 // Date & Time
 // ======================================
-
+function updateClock() {
+    const currentDate = getCurrentDate();
+    currentTimeH1.innerText = formatClockTime(currentDate);
+    todayDateP.innerText = formatDate(currentDate);
+}
+updateClock();
+setInterval(updateClock, 1000);
 // ======================================
 // Theme
 // ======================================
-
+const themeToggleCheckbox = document.querySelector("#theme-toggle-checkbox");
+let appTheme = loadTheme();
+function applyTheme() {
+    if (appTheme === "light") {
+        document.body.classList.remove("dark");
+        themeToggleCheckbox.checked = false;
+    } else {
+        document.body.classList.add("dark");
+        themeToggleCheckbox.checked = true;
+    }
+}
+applyTheme();
+themeToggleCheckbox.addEventListener("change", () => {
+    if (themeToggleCheckbox.checked) {
+        appTheme = "dark";
+    } else {
+        appTheme = "light";
+    }
+    applyTheme();
+    saveTheme(appTheme);
+});
 // ======================================
 // Initialization
 // ======================================
